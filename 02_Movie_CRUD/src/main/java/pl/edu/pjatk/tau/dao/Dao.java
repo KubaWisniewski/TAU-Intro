@@ -10,5 +10,6 @@ public interface Dao<T> {
     List<T> getAll();
     Optional<T> getById(Long id);
     Long delete(T o);
+    Long update(T o);
 
 }

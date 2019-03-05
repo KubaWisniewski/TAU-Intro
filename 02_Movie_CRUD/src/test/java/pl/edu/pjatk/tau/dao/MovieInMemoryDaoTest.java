@@ -55,10 +55,24 @@ public class MovieInMemoryDaoTest {
     @Test
     public void checkDeleteMethod(){
         Movie movie= movieDao.getById(1L).get();
-        Assert.assertEquals(1l,movieDao.delete(movie).longValue());
+        Assert.assertEquals(1L,movieDao.delete(movie).longValue());
         Assert.assertEquals(1,movieDao.movies.size());
-
-
     }
 
+    @Test
+    public void checkUpdateMethod(){
+        Movie movie=movieDao.getById(1L).get();
+        movie.setTitle("KKK");
+        movie.setDuration(50);
+        Assert.assertEquals(1L,movieDao.update(movie).longValue());
+        Assert.assertEquals("KKK",movieDao.getById(1L).get().getTitle());
+        Assert.assertEquals(50,movieDao.getById(1L).get().getDuration());
+
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUpdateExistMethod(){
+        Movie m = new Movie(3L,"GGG",90);
+        movieDao.update(m);
+
+    }
 }
