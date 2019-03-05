@@ -50,6 +50,13 @@ public class MovieInMemoryDaoTest {
     @Test(expected = IllegalArgumentException.class)
     public void checkGettingExist(){
         movieDao.getById(3L);
+    }
+
+    @Test
+    public void checkDeleteMethod(){
+        Movie movie= movieDao.getById(1L).get();
+        Assert.assertEquals(1l,movieDao.delete(movie).longValue());
+        Assert.assertEquals(1,movieDao.movies.size());
 
 
     }

@@ -9,5 +9,6 @@ public interface Dao<T> {
     Long save(T o);
     List<T> getAll();
     Optional<T> getById(Long id);
+    Long delete(T o);
 
 }
