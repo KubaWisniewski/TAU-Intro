@@ -29,9 +29,29 @@ public class MovieInMemoryDaoTest {
         Assert.assertEquals(3L,movieDao.save(movie).longValue());
         Assert.assertEquals(movieDao.movies.size(),3);
     }
+    @Test(expected = IllegalArgumentException.class)
+    public void checkSavingExist(){
+            Movie movie =new Movie(1L,"C",100);
+            movieDao.save(movie);
+    }
+
     @Test
     public void checkGettingAllMovies(){
         Assert.assertArrayEquals(movieDao.movies.toArray(),movieDao.getAll().toArray());
         Assert.assertEquals(movieDao.movies.size(),movieDao.getAll().size());
     }
+
+    @Test
+   public void checkGettingById(){
+        Movie movie= new Movie(3L, "C",105);
+        movieDao.save(movie);
+        Assert.assertEquals(movie,movieDao.getById(3L).get());
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void checkGettingExist(){
+        movieDao.getById(3L);
+
+
+    }
+
 }
