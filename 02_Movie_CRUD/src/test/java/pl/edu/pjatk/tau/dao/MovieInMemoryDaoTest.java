@@ -29,4 +29,9 @@ public class MovieInMemoryDaoTest {
         Assert.assertEquals(3L,movieDao.save(movie).longValue());
         Assert.assertEquals(movieDao.movies.size(),3);
     }
+    @Test
+    public void checkGettingAllMovies(){
+        Assert.assertArrayEquals(movieDao.movies.toArray(),movieDao.getAll().toArray());
+        Assert.assertEquals(movieDao.movies.size(),movieDao.getAll().size());
+    }
 }

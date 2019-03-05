@@ -13,4 +13,9 @@ public class MovieInMemoryDao implements Dao<Movie> {
         movies.add(o);
         return o.getId();
     }
+
+    @Override
+    public List<Movie> getAll() {
+        return movies;
+    }
 }
