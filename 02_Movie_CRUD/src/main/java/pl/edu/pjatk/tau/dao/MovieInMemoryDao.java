@@ -37,11 +37,12 @@ public class MovieInMemoryDao implements Dao<Movie> {
     }
 
     @Override
-    public Long update(Movie o) throws IllegalArgumentException{
-        if(!movies.contains(o))
+    public Long update(Movie o) throws IllegalArgumentException {
+        if (!movies.stream().anyMatch(x -> x.getId().equals(o.getId())))
             throw new IllegalArgumentException("Movie not exist");
-        Movie m =movies.get(o.getId().intValue()-1);
-        m=o;
+        Movie m = movies.get(o.getId().intValue() - 1);
+        m.setTitle(o.getTitle());
+        m.setDuration(o.getDuration());
         return o.getId();
     }
 
