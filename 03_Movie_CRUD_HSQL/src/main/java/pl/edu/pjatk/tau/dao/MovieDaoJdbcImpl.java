@@ -12,6 +12,7 @@ public class MovieDaoJdbcImpl implements MovieDao {
     private PreparedStatement addMovieStmt;
     private PreparedStatement getAllMoviesStmt;
     private PreparedStatement getMovieStmt;
+    private PreparedStatement updateMovieStmt;
 
 
     public MovieDaoJdbcImpl() throws SQLException {
@@ -68,6 +69,26 @@ public class MovieDaoJdbcImpl implements MovieDao {
         return count;
     }
 
+    @Override
+    public int updateMovie(Movie movie) throws SQLException {
+        int count = 0;
+        try {
+            updateMovieStmt.setString(1, movie.getTitle());
+            updateMovieStmt.setInt(2, movie.getDuration());
+            if (movie.getId() != null) {
+                updateMovieStmt.setLong(3, movie.getId());
+            } else {
+                updateMovieStmt.setLong(3, -1);
+            }
+            count = updateMovieStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
+        }
+        if (count <= 0)
+            throw new SQLException("Movie not found for update");
+        return count;
+    }
+
     public List<Movie> getAllMovies() {
         List<Movie> moviess = new LinkedList<>();
         try {
@@ -100,6 +121,8 @@ public class MovieDaoJdbcImpl implements MovieDao {
                 Statement.RETURN_GENERATED_KEYS);
         getAllMoviesStmt = connection.prepareStatement("SELECT id, title, duration FROM Movie ORDER BY id");
         getMovieStmt = connection.prepareStatement("SELECT id, title, duration FROM Movie WHERE id = ?");
+        updateMovieStmt = connection.prepareStatement("UPDATE Movie SET title=?,duration=? WHERE id = ?");
+
     }
 
     @Override

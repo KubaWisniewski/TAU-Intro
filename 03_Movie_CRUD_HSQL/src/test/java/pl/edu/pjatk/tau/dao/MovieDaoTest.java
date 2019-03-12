@@ -97,4 +97,19 @@ public class MovieDaoTest {
 
     }
 
+    @Test()
+    public void checkUpdatingSuccess() throws SQLException {
+        Movie m = expectedDbState.get(3);
+        m.setTitle("B");
+        expectedDbState.set(3, m);
+        Assert.assertEquals(1, movieManager.updateMovie(m));
+        Assert.assertThat(movieManager.getAllMovies(), equalTo(expectedDbState));
+    }
+
+    @Test(expected = SQLException.class)
+    public void checkUpdatingFailure() throws SQLException {
+        Movie m = new Movie("B", 123);
+        Assert.assertEquals(1, movieManager.updateMovie(m));
+    }
+
 }
