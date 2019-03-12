@@ -112,4 +112,13 @@ public class MovieDaoTest {
         Assert.assertEquals(1, movieManager.updateMovie(m));
     }
 
+    @Test(expected = SQLException.class)
+    public void checkDeleting() throws SQLException {
+        Movie m = expectedDbState.get(3);
+        expectedDbState.remove(m);
+        Assert.assertEquals(1, movieManager.deleteMovie(m));
+        Assert.assertThat(movieManager.getAllMovies(), equalTo(expectedDbState));
+        Assert.assertNull(movieManager.getMovie(m.getId()));
+    }
+
 }

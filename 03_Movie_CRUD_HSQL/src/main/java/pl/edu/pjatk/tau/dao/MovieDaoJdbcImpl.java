@@ -13,6 +13,7 @@ public class MovieDaoJdbcImpl implements MovieDao {
     private PreparedStatement getAllMoviesStmt;
     private PreparedStatement getMovieStmt;
     private PreparedStatement updateMovieStmt;
+    private PreparedStatement deleteMovieStmt;
 
 
     public MovieDaoJdbcImpl() throws SQLException {
@@ -122,6 +123,8 @@ public class MovieDaoJdbcImpl implements MovieDao {
         getAllMoviesStmt = connection.prepareStatement("SELECT id, title, duration FROM Movie ORDER BY id");
         getMovieStmt = connection.prepareStatement("SELECT id, title, duration FROM Movie WHERE id = ?");
         updateMovieStmt = connection.prepareStatement("UPDATE Movie SET title=?,duration=? WHERE id = ?");
+        deleteMovieStmt = connection.prepareStatement("DELETE FROM Movie where id = ?");
+
 
     }
 
@@ -143,5 +146,15 @@ public class MovieDaoJdbcImpl implements MovieDao {
             throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
         }
         throw new SQLException("Movie with id " + id + " does not exist");
+    }
+
+    @Override
+    public int deleteMovie(Movie movie) {
+        try {
+            deleteMovieStmt.setLong(1, movie.getId());
+            return deleteMovieStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
+        }
     }
 }

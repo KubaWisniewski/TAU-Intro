@@ -16,7 +16,10 @@ public interface MovieDao {
     List<Movie> getAllMovies();
 
     Movie getMovie(long id) throws SQLException;
-     int updateMovie(Movie movie) throws SQLException;
+
+    int updateMovie(Movie movie) throws SQLException;
+
+    int deleteMovie(Movie movie);
 
 
 }
