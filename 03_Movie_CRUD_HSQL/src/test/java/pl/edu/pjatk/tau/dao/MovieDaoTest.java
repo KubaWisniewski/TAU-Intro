@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 
 public class MovieDaoTest {
 
@@ -68,11 +70,31 @@ public class MovieDaoTest {
     }
 
     @Test
-    public void checkAdding() throws Exception {
+    public void checkAdding() {
         Movie movie = new Movie();
         movie.setTitle("B");
         movie.setDuration(100);
         Assert.assertEquals(1, movieManager.addMovie(movie));
+        expectedDbState.add(movie);
+        Assert.assertThat(movieManager.getAllMovies(), equalTo(expectedDbState));
+    }
+
+    @Test
+    public void checkGettingAll() {
+        Assert.assertThat(movieManager.getAllMovies(), equalTo(expectedDbState));
+    }
+
+    @Test
+    public void checkGettingById() throws Exception {
+        Movie movie = expectedDbState.get(5);
+        Assert.assertEquals(movie, movieManager.getMovie(movie.getId()));
+    }
+
+    @Test(expected = Exception.class)
+    public void checkGettingByIdException() throws Exception {
+        Movie movie = expectedDbState.get(12);
+        Assert.assertEquals(movie, movieManager.getMovie(movie.getId()));
 
     }
+
 }

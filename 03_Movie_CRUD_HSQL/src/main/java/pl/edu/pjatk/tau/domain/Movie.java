@@ -50,9 +50,9 @@ public class Movie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie movie = (Movie) o;
-        return duration == movie.duration &&
-                Objects.equals(id, movie.id) &&
-                Objects.equals(title, movie.title);
+        return Objects.equals(id, movie.id) &&
+                Objects.equals(title, movie.title) &&
+                Objects.equals(duration, movie.duration);
     }
 
     @Override

@@ -3,11 +3,15 @@ package pl.edu.pjatk.tau.dao;
 import pl.edu.pjatk.tau.domain.Movie;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MovieDaoJdbcImpl implements MovieDao {
 
     private Connection connection;
     private PreparedStatement addMovieStmt;
+    private PreparedStatement getAllMoviesStmt;
+    private PreparedStatement getMovieStmt;
 
 
     public MovieDaoJdbcImpl() throws SQLException {
@@ -15,9 +19,9 @@ public class MovieDaoJdbcImpl implements MovieDao {
 
     public MovieDaoJdbcImpl(Connection connection) throws SQLException {
         this.connection = connection;
-        // if (!isDatabaseReady()) {
-        //    createTables();
-        //}
+        if (!isDatabaseReady()) {
+            createTables();
+        }
 
         setConnection(connection);
     }
@@ -36,7 +40,7 @@ public class MovieDaoJdbcImpl implements MovieDao {
             ResultSet rs = connection.getMetaData().getTables(null, null, null, null);
             boolean tableExists = false;
             while (rs.next()) {
-                if ("Person".equalsIgnoreCase(rs.getString("TABLE_NAME"))) {
+                if ("Movie".equalsIgnoreCase(rs.getString("TABLE_NAME"))) {
                     tableExists = true;
                     break;
                 }
@@ -64,6 +68,25 @@ public class MovieDaoJdbcImpl implements MovieDao {
         return count;
     }
 
+    public List<Movie> getAllMovies() {
+        List<Movie> moviess = new LinkedList<>();
+        try {
+            ResultSet rs = getAllMoviesStmt.executeQuery();
+
+            while (rs.next()) {
+                Movie m = new Movie();
+                m.setId(rs.getLong("id"));
+                m.setTitle(rs.getString("title"));
+                m.setDuration(rs.getInt("duration"));
+                moviess.add(m);
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
+        }
+        return moviess;
+    }
+
     @Override
     public Connection getConnection() {
         return connection;
@@ -75,5 +98,27 @@ public class MovieDaoJdbcImpl implements MovieDao {
         addMovieStmt = connection.prepareStatement(
                 "INSERT INTO Movie (title, duration) VALUES (?, ?)",
                 Statement.RETURN_GENERATED_KEYS);
+        getAllMoviesStmt = connection.prepareStatement("SELECT id, title, duration FROM Movie ORDER BY id");
+        getMovieStmt = connection.prepareStatement("SELECT id, title, duration FROM Movie WHERE id = ?");
+    }
+
+    @Override
+    public Movie getMovie(long id) throws SQLException {
+        try {
+            getMovieStmt.setLong(1, id);
+            ResultSet rs = getMovieStmt.executeQuery();
+
+            if (rs.next()) {
+                Movie p = new Movie();
+                p.setId(rs.getLong("id"));
+                p.setTitle(rs.getString("title"));
+                p.setDuration(rs.getInt("duration"));
+                return p;
+            }
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
+        }
+        throw new SQLException("Movie with id " + id + " does not exist");
     }
 }

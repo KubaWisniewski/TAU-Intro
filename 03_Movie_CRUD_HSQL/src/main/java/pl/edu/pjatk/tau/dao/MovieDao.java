@@ -4,6 +4,7 @@ import pl.edu.pjatk.tau.domain.Movie;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface MovieDao {
     Connection getConnection();
@@ -11,4 +12,10 @@ public interface MovieDao {
     void setConnection(Connection connection) throws SQLException;
 
     int addMovie(Movie movie);
+
+    List<Movie> getAllMovies();
+
+    Movie getMovie(long id) throws SQLException;
+
+
 }
