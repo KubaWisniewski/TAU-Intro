@@ -16,4 +16,6 @@ public interface MovieDao {
     public int addMovie(Movie movie) throws SQLException;
 
     public Movie getMovie(long id) throws SQLException;
+
+    public int deleteMovie(Movie movie) throws SQLException;
 }

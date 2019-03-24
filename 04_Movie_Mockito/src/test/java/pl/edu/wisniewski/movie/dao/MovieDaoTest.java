@@ -61,6 +61,8 @@ public class MovieDaoTest {
     PreparedStatement insertStatementMock;
     @Mock
     PreparedStatement selectByIdStatementMock;
+    @Mock
+    PreparedStatement deleteStatementMock;
 
     @Before
     public void setup() throws SQLException {
@@ -76,6 +78,7 @@ public class MovieDaoTest {
         when(connection.prepareStatement("SELECT id, title, duration FROM Movie ORDER BY id")).thenReturn(selectStatementMock);
         when(connection.prepareStatement("INSERT INTO Movie (title, duration) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)).thenReturn(insertStatementMock);
         when(connection.prepareStatement("SELECT id, title, duration FROM Movie WHERE id = ?")).thenReturn(selectByIdStatementMock);
+        when(connection.prepareStatement("DELETE FROM Movie where id = ?")).thenReturn(deleteStatementMock);
     }
 
     @Test
@@ -140,7 +143,7 @@ public class MovieDaoTest {
     }
 
     @Test
-    public void checkGettingById() throws Exception {
+    public void checkGettingById() throws SQLException {
         AbstractResultSet mockedResultSet = mock(AbstractResultSet.class);
         when(mockedResultSet.next()).thenCallRealMethod();
         when(mockedResultSet.getLong("id")).thenReturn(initialDatabaseState.get(5).getId());
@@ -161,5 +164,20 @@ public class MovieDaoTest {
         Mockito.verify(mockedResultSet, times(1)).getInt("duration");
         Mockito.verify(mockedResultSet, times(1)).next();
     }
+
+    @Test
+    public void checkDelete() throws SQLException {
+        InOrder inOrder = inOrder(deleteStatementMock);
+        when(deleteStatementMock.executeUpdate()).thenReturn(1);
+
+        MovieDaoJdbcImpl dao = new MovieDaoJdbcImpl();
+        dao.setConnection(connection);
+        Movie movie = initialDatabaseState.get(5);
+        dao.deleteMovie(movie);
+
+        inOrder.verify(deleteStatementMock, times(1)).setLong(1, 5);
+        inOrder.verify(deleteStatementMock).executeUpdate();
+    }
+
 
 }

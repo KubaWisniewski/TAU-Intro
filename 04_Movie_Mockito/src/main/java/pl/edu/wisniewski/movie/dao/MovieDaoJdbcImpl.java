@@ -11,6 +11,7 @@ public class MovieDaoJdbcImpl implements MovieDao {
     public PreparedStatement preparedStatementGetAll;
     public PreparedStatement preparedStatementInsert;
     public PreparedStatement preparedStatementGetMovie;
+    public PreparedStatement preparedStatementDelete;
     Connection connection;
 
 
@@ -28,6 +29,7 @@ public class MovieDaoJdbcImpl implements MovieDao {
                 "INSERT INTO Movie (title, duration) VALUES (?, ?)",
                 Statement.RETURN_GENERATED_KEYS);
         preparedStatementGetMovie = connection.prepareStatement("SELECT id, title, duration FROM Movie WHERE id = ?");
+        preparedStatementDelete = connection.prepareStatement("DELETE FROM Movie where id = ?");
 
     }
 
@@ -76,5 +78,16 @@ public class MovieDaoJdbcImpl implements MovieDao {
         preparedStatementInsert.setInt(2, movie.getDuration());
         int r = preparedStatementInsert.executeUpdate();
         return r;
+    }
+
+    @Override
+    public int deleteMovie(Movie movie) throws SQLException {
+        try {
+            preparedStatementDelete.setLong(1, movie.getId());
+            int r = preparedStatementDelete.executeUpdate();
+            return r;
+        } catch (SQLException e) {
+            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
+        }
     }
 }
