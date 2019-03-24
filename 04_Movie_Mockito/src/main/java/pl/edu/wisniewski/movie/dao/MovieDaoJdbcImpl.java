@@ -12,6 +12,7 @@ public class MovieDaoJdbcImpl implements MovieDao {
     public PreparedStatement preparedStatementInsert;
     public PreparedStatement preparedStatementGetMovie;
     public PreparedStatement preparedStatementDelete;
+    public PreparedStatement preparedStatementUpdate;
     Connection connection;
 
 
@@ -30,6 +31,7 @@ public class MovieDaoJdbcImpl implements MovieDao {
                 Statement.RETURN_GENERATED_KEYS);
         preparedStatementGetMovie = connection.prepareStatement("SELECT id, title, duration FROM Movie WHERE id = ?");
         preparedStatementDelete = connection.prepareStatement("DELETE FROM Movie where id = ?");
+        preparedStatementUpdate = connection.prepareStatement("UPDATE Movie SET title=?,duration=? WHERE id = ?");
 
     }
 
@@ -80,8 +82,29 @@ public class MovieDaoJdbcImpl implements MovieDao {
         return r;
     }
 
+
     @Override
-    public int deleteMovie(Movie movie) throws SQLException {
+    public int updateMovie(Movie movie) throws SQLException {
+        int count = 0;
+        try {
+            preparedStatementUpdate.setString(1, movie.getTitle());
+            preparedStatementUpdate.setInt(2, movie.getDuration());
+            if (movie.getId() != null) {
+                preparedStatementUpdate.setLong(3, movie.getId());
+            } else {
+                preparedStatementUpdate.setLong(3, -1);
+            }
+            count = preparedStatementUpdate.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
+        }
+        if (count <= 0)
+            throw new SQLException("Movie not found for update");
+        return count;
+    }
+
+    @Override
+    public int deleteMovie(Movie movie) {
         try {
             preparedStatementDelete.setLong(1, movie.getId());
             int r = preparedStatementDelete.executeUpdate();

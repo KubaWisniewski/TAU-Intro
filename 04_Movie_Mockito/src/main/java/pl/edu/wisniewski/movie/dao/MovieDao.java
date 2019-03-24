@@ -18,4 +18,6 @@ public interface MovieDao {
     public Movie getMovie(long id) throws SQLException;
 
     public int deleteMovie(Movie movie) throws SQLException;
+
+    public int updateMovie(Movie movie) throws SQLException;
 }
