@@ -79,6 +79,8 @@ public class MovieDaoJdbcImpl implements MovieDao {
         preparedStatementInsert.setString(1, movie.getTitle());
         preparedStatementInsert.setInt(2, movie.getDuration());
         int r = preparedStatementInsert.executeUpdate();
+        if (r <= 0)
+            throw new SQLException("Movie not found for add");
         return r;
     }
 
@@ -104,13 +106,12 @@ public class MovieDaoJdbcImpl implements MovieDao {
     }
 
     @Override
-    public int deleteMovie(Movie movie) {
-        try {
-            preparedStatementDelete.setLong(1, movie.getId());
-            int r = preparedStatementDelete.executeUpdate();
-            return r;
-        } catch (SQLException e) {
-            throw new IllegalStateException(e.getMessage() + "\n" + e.getStackTrace().toString());
-        }
+    public int deleteMovie(Movie movie) throws SQLException {
+        preparedStatementDelete.setLong(1, movie.getId());
+        int r = preparedStatementDelete.executeUpdate();
+        if (r <= 0)
+            throw new SQLException("Movie not found for delete");
+        return r;
+
     }
 }
