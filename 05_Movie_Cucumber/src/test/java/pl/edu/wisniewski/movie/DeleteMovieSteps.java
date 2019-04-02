@@ -11,7 +11,7 @@ import pl.edu.wisniewski.movie.service.MovieService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class deleteMovieSteps {
+public class DeleteMovieSteps {
     private MovieInMemoryDao movieInMemoryDao = new MovieInMemoryDao();
     private MovieService movieService = new MovieService();
     private List<Movie> deleteMovies = new ArrayList<>();

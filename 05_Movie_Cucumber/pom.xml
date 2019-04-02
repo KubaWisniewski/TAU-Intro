@@ -9,6 +9,7 @@
     <url>http://maven.apache.org</url>
     <properties>
         <cucumber.version>4.2.6</cucumber.version>
+        <jbehave.version>4.4</jbehave.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -30,6 +31,14 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
             <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.jbehave</groupId>
+            <artifactId>jbehave-core</artifactId>
+            <version>${jbehave.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

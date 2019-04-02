@@ -10,11 +10,16 @@ import pl.edu.wisniewski.movie.service.MovieService;
 
 import java.util.List;
 
-public class searchMovieSteps {
+public class SearchMovieSteps {
     private MovieInMemoryDao movieInMemoryDao = new MovieInMemoryDao();
     private MovieService movieService = new MovieService();
     private Movie searchMovie;
 
+    private String checkMovieExist() {
+        if (searchMovie.getTitle().equals("A1"))
+            return "Yes";
+        return "No";
+    }
 
     @Given("cinema")
     public void dataSource() {
@@ -24,8 +29,8 @@ public class searchMovieSteps {
     @Given("^I have 3 movies in$")
     public void dataWithThreeMovies() {
         movieInMemoryDao.save(new Movie(1L, "A1", 120));
-        movieInMemoryDao.save(new Movie(2L, "A4", 100));
-        movieInMemoryDao.save(new Movie(3L, "A5", 110));
+        movieInMemoryDao.save(new Movie(2L, "A2", 100));
+        movieInMemoryDao.save(new Movie(3L, "A3", 110));
     }
 
     @When("^Spectator ask about \"([^\"]*)\"$")
@@ -35,11 +40,7 @@ public class searchMovieSteps {
 
     @Then("^Then should get \"([^\"]*)\"$")
     public void oneRecordShouldBeFound(String answer) {
-        String systemAnswer;
-        if (searchMovie.getTitle().equals("A1"))
-            systemAnswer = "Yes";
-        else
-            systemAnswer = "No";
+        String systemAnswer = checkMovieExist();
         Assert.assertEquals(answer, systemAnswer);
 
     }

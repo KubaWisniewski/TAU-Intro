@@ -7,7 +7,7 @@ import org.junit.Assert;
 import pl.edu.wisniewski.movie.dao.MovieInMemoryDao;
 import pl.edu.wisniewski.movie.domain.Movie;
 
-public class addMovieSteps {
+public class AddMovieSteps {
     private MovieInMemoryDao movieInMemoryDao = new MovieInMemoryDao();
     private Movie movie = new Movie();
 
