@@ -9,14 +9,19 @@ import pl.edu.wisniewski.movie.domain.Movie;
 
 public class AddMovieSteps {
     private MovieInMemoryDao movieInMemoryDao = new MovieInMemoryDao();
-    private Movie movie = new Movie();
+    private Movie movie;
 
-    @Given("^I have movie with title \"([^\"]*)\"$$")
-    public void setMovieTitle(String title) {
+    @Given("^I have movie$")
+    public void setMovieTitle() {
+        movie = new Movie();
+    }
+
+    @When("^I want set title to \"([^\"]*)\"$")
+    public void setMovie(String title) {
         movie.setTitle(title);
     }
 
-    @When("^I want set duration on \"([^\"]*)\"$$")
+    @When("^Set duration on default \"([^\"]*)\"$")
     public void setMovieDuration(String duration) {
         movie.setDuration(Integer.parseInt(duration));
         movieInMemoryDao.save(movie);
