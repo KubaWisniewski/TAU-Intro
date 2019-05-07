@@ -9,15 +9,27 @@ import java.util.Objects;
 @NamedQueries({
 
         @NamedQuery(name = "movie.all", query = "Select p from Movie p"),
-        @NamedQuery(name = "movie.findMoviesByTitle", query = "Select c from Movie c where c.title like :titleNameFragment")
+        @NamedQuery(name = "movie.findMoviesByTitle", query = "Select c from Movie c where c.title like :titleNameFragment"),
+        @NamedQuery(name = "movie.findMoviesByDirector", query = "Select c from Movie c where c.director= :director")
+
 })
 public class Movie {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
     private Integer duration;
+    @ManyToOne
+    @JoinColumn(name = "director_id")
+    private Director director;
+
+    public Director getDirector() {
+        return director;
+    }
+
+    public void setDirector(Director director) {
+        this.director = director;
+    }
 
     public Movie() {
     }
