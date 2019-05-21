@@ -87,16 +87,18 @@ public class MovieControllerMockMvcTest {
     }
 
     @Test
-    public void deleteShouldRemoveMovieFromDatabase() throws Exception{
+    public void deleteShouldRemoveMovieFromDatabase() throws Exception {
         Movie p = new Movie();
         p.setId(1L);
         p.setTitle("Bbb");
         p.setDuration(120);
-        this.mockMvc.perform(delete("/movie/"+p.getId())
+        when(service.findMovieById(1L)).thenReturn(p);
+        this.mockMvc.perform(delete("/movie/" + p.getId())
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("OK"));
 
+        verify(service).deleteMovie(p);
 
     }
 
@@ -114,8 +116,9 @@ public class MovieControllerMockMvcTest {
         verify(service).findMovieById(1L);
 
     }
+
     @Test
-    public void putShouldReturnUpdatedMovieFromDatabase() throws Exception{
+    public void putShouldReturnUpdatedMovieFromDatabase() throws Exception {
         Movie p = new Movie();
         p.setId(1L);
         p.setTitle("Bbb");
@@ -125,7 +128,8 @@ public class MovieControllerMockMvcTest {
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("OK"));
-
+        p.setTitle("Aaa");
+        verify(service).updateMovie(p);
 
     }
 }
