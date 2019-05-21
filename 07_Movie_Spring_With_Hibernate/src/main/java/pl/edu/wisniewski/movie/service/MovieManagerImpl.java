@@ -8,7 +8,6 @@ import pl.edu.wisniewski.movie.domain.Director;
 import pl.edu.wisniewski.movie.domain.Movie;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -26,7 +25,7 @@ public class MovieManagerImpl implements MovieManager {
 
     @Override
     public Movie findMovieById(Long id) {
-        return sessionFactory.getCurrentSession().get(Movie.class, id);
+        return (Movie) sessionFactory.getCurrentSession().get(Movie.class, id);
     }
 
     @Override
@@ -45,7 +44,7 @@ public class MovieManagerImpl implements MovieManager {
     @Override
     public List<Movie> getAllMoviesForDirector(Director director) {
         return (List<Movie>) sessionFactory.getCurrentSession()
-                .getNamedQuery("movie.findMoviesByDirector")
+                .getNamedQuery("movie.findMoviesByDir   ector")
                 .setParameter("director", director)
                 .list();
     }

@@ -1,6 +1,9 @@
 package pl.edu.wisniewski.movie.domain;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -69,14 +72,29 @@ public class Movie {
         this.duration = duration;
     }
 
+    public Movie clone() {
+        Movie p = new Movie();
+        p.director = null;
+        p.id = id;
+        p.title = title;
+        p.duration = duration;
+        return p;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Movie movie = (Movie) o;
-        return Objects.equals(id, movie.id) &&
-                Objects.equals(title, movie.title) &&
-                Objects.equals(duration, movie.duration);
+        return o.toString().equals(this.toString());
+
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return "<ERROR>";
+        }
     }
 
     @Override
